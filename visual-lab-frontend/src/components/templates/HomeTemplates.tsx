@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SketchPad, { SKETCHPAD_WIDTH } from "../features/Sketchpad";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import React from "react";
+import StyleSelector from "../features/StyleSelector";
 
 const SketchPadWithMemo = React.memo(SketchPad);
 
@@ -56,14 +57,25 @@ export default function HomeTemplate() {
     }
   }, [windowWidth, windowHeight]);
 
+  const scale = useMemo(() => Math.min(1, width / SKETCHPAD_WIDTH), [width]);
+
   return (
-    <div
-      style={{
-        scale: `${Math.min(1, width / SKETCHPAD_WIDTH)}`,
-        transformOrigin: "left top",
-      }}
-    >
-      <SketchPadWithMemo aspect={aspectRatio} />
+    <div>
+      <div
+        style={{
+          scale: scale.toString(),
+          margin: `0 0 ${-1 * SKETCHPAD_WIDTH * aspectRatio * (1 - scale)}px`,
+          transformOrigin: "left top",
+        }}
+      >
+        <SketchPadWithMemo aspect={aspectRatio} />
+      </div>
+
+      <StyleSelector handleSelectStyle={() => {}} />
+
+      <button value="" onClick={() => {}}>
+        Generate Visual
+      </button>
     </div>
   );
 }

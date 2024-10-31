@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 
 export const SKETCHPAD_WIDTH = 960;
 
-export default function SketchPad({ aspect }: { aspect: number }) {
+export default ({ aspect }: { aspect: number }) => {
   const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
 
   let isDragging = false;
@@ -80,7 +80,6 @@ export default function SketchPad({ aspect }: { aspect: number }) {
       draw(e.layerX, e.layerY);
     });
 
-    console.log(canvas.getBoundingClientRect().width);
     // SP用
     canvas.addEventListener("touchstart", getDragStart(context));
     canvas.addEventListener("touchcancel", getDragEnd(context));
@@ -117,4 +116,4 @@ export default function SketchPad({ aspect }: { aspect: number }) {
       height={SKETCHPAD_WIDTH * aspect}
     />
   );
-}
+};
