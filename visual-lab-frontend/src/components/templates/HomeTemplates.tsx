@@ -3,6 +3,7 @@ import SketchPad, { SKETCHPAD_WIDTH } from "../features/Sketchpad";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import React from "react";
 import StyleSelector from "../features/StyleSelector";
+import { Button } from "@mui/material";
 
 const SketchPadWithMemo = React.memo(SketchPad);
 
@@ -73,9 +74,9 @@ export default function HomeTemplate() {
 
       <StyleSelector handleSelectStyle={() => {}} />
 
-      <button value="" onClick={() => {}}>
+      <Button color="primary" variant="contained" onClick={() => {}}>
         Generate Visual
-      </button>
+      </Button>
     </div>
   );
 }

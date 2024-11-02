@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Aesthetic, ColorScheme, Style } from "../../types/Style";
 import { styleLabels } from "../../locales/style";
 import { useLocale } from "../../context/locale";
-import { TextareaAutosize } from "@mui/material";
+import { TextField } from "@mui/material";
 
 export default ({
   handleSelectStyle,
@@ -139,7 +139,15 @@ export default ({
       </div>
       <div>
         <h3>{labels.freeInput.title}</h3>
-        <TextareaAutosize placeholder={labels.freeInput.description} />
+        <TextField
+          id="outlined-multiline-static"
+          fullWidth
+          label="Multiline"
+          multiline
+          rows={4}
+          placeholder={labels.freeInput.description}
+          style={{ color: "white" }}
+        />
       </div>
     </div>
   );

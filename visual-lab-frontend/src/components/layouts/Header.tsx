@@ -1,16 +1,21 @@
 import { Link } from "@tanstack/react-router";
 import LocaleSelector from "../features/LocaleSelector";
 import { useLocale } from "../../context/locale";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 
 export default () => {
   const { locale, setLocale } = useLocale();
 
   return (
-    <>
-      <div className="flex justify-between">
-        <h1>Visual Lab</h1>
-        <LocaleSelector locale={locale} setLocale={setLocale} />
-      </div>
-    </>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar>
+        <Toolbar>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Visual Lab
+          </Typography>
+          <LocaleSelector locale={locale} setLocale={setLocale} />
+        </Toolbar>
+      </AppBar>
+    </Box>
   );
 };
