@@ -26,11 +26,11 @@ export const styleLabels = {
     title: "生成する画像のスタイル",
     aesthetic: {
       chooseStyle: "テイストを選択",
-      photoreal: "写実的",
-      illustration: "CGイラスト調",
-      anime: "アニメ調",
-      manga: "マンガ調",
-      abstract: "抽象的",
+      photoreal: "写実",
+      illustration: "CG",
+      anime: "アニメ",
+      manga: "マンガ",
+      abstract: "抽象画",
     },
     colorScheme: {
       chooseStyle: "色調を選択",

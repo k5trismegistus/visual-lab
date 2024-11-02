@@ -3,6 +3,7 @@ import { Aesthetic, ColorScheme, Style } from "../../types/Style";
 import { styleLabels } from "../../locales/style";
 import { useLocale } from "../../context/locale";
 import { TextField } from "@mui/material";
+import IconRadioButton from "../parts/IconRadioButton";
 
 export default ({
   handleSelectStyle,
@@ -20,129 +21,71 @@ export default ({
     handleSelectStyle({ aesthetic, colorScheme });
   }, [aesthetic, colorScheme]);
 
+  const aestheticOptions = useMemo<
+    Array<{
+      value: Aesthetic;
+      label: string;
+    }>
+  >(() => {
+    return [
+      { value: "photoreal", label: labels.aesthetic.photoreal },
+      { value: "illustration", label: labels.aesthetic.illustration },
+      { value: "anime", label: labels.aesthetic.anime },
+      { value: "manga", label: labels.aesthetic.manga },
+      { value: "abstract", label: labels.aesthetic.abstract },
+    ];
+  }, [locale]);
+
+  const colorSchemeOptions = useMemo<
+    Array<{ value: ColorScheme; label: string }>
+  >(() => {
+    return [
+      { value: "natural", label: labels.colorScheme.natural },
+      { value: "vivid", label: labels.colorScheme.vivid },
+      { value: "soft", label: labels.colorScheme.soft },
+      { value: "monotone", label: labels.colorScheme.monotone },
+    ];
+  }, [locale]);
+
   return (
-    <div className="gap-4">
-      <h2>{labels.title}</h2>
+    <div className="gap-4" style={{ width: 400, padding: "12px 12px 60px" }}>
+      <h2 className="font-bold" style={{ fontSize: 24 }}>
+        {labels.title}
+      </h2>
 
-      <div>
-        <h3>{labels.aesthetic.chooseStyle}</h3>
+      <div style={{ marginBottom: 12 }}>
+        <h3 className="font-bold">{labels.aesthetic.chooseStyle}</h3>
 
-        <div className="flex">
-          <div>
-            <input
-              type="radio"
-              id="photoreal"
-              name="aesthetic"
-              value="photoreal"
-              checked={aesthetic === "photoreal"}
-              onChange={() => setAesthetic("photoreal")}
+        <div className="flex justify-between">
+          {aestheticOptions.map((option) => (
+            <IconRadioButton
+              src={`/images/aesthetic/${option.value}_128x128.webp`}
+              label={option.label}
+              selected={aesthetic === option.value}
+              onClick={() => setAesthetic(option.value)}
             />
-            <label htmlFor="photoreal">{labels.aesthetic.photoreal}</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="illustration"
-              name="aesthetic"
-              value="illustration"
-              checked={aesthetic === "illustration"}
-              onChange={() => setAesthetic("illustration")}
-            />
-            <label htmlFor="illustration">
-              {labels.aesthetic.illustration}
-            </label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="anime"
-              name="aesthetic"
-              value="anime"
-              checked={aesthetic === "anime"}
-              onChange={() => setAesthetic("anime")}
-            />
-            <label htmlFor="anime">{labels.aesthetic.anime}</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="manga"
-              name="aesthetic"
-              value="manga"
-              checked={aesthetic === "manga"}
-              onChange={() => setAesthetic("manga")}
-            />
-            <label htmlFor="manga">{labels.aesthetic.manga}</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="abstract"
-              name="aesthetic"
-              value="abstract"
-              checked={aesthetic === "abstract"}
-              onChange={() => setAesthetic("abstract")}
-            />
-            <label htmlFor="abstract">{labels.aesthetic.abstract}</label>
-          </div>
+          ))}
         </div>
       </div>
-      <div>
-        <h3>{labels.colorScheme.chooseStyle}</h3>
+      <div style={{ marginBottom: 12 }}>
+        <h3 className="font-bold">{labels.colorScheme.chooseStyle}</h3>
 
-        <div className="flex">
-          <div>
-            <input
-              type="radio"
-              id="natural"
-              name="colorScheme"
-              value="natural"
-              checked={colorScheme === "natural"}
-              onChange={() => setColorScheme("natural")}
+        <div className="flex justify-between">
+          {colorSchemeOptions.map((option) => (
+            <IconRadioButton
+              src={`/images/color_scheme/${option.value}_128x128.webp`}
+              label={option.label}
+              selected={colorScheme === option.value}
+              onClick={() => setColorScheme(option.value)}
             />
-            <label htmlFor="natural">{labels.colorScheme.natural}</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="vivid"
-              name="colorScheme"
-              value="vivid"
-              checked={colorScheme === "vivid"}
-              onChange={() => setColorScheme("vivid")}
-            />
-            <label htmlFor="vivid">{labels.colorScheme.vivid}</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="soft"
-              name="colorScheme"
-              value="soft"
-              checked={colorScheme === "soft"}
-              onChange={() => setColorScheme("soft")}
-            />
-            <label htmlFor="soft">{labels.colorScheme.soft}</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="monotone"
-              name="colorScheme"
-              value="monotone"
-              checked={colorScheme === "monotone"}
-              onChange={() => setColorScheme("monotone")}
-            />
-            <label htmlFor="monotone">{labels.colorScheme.monotone}</label>
-          </div>
+          ))}
         </div>
       </div>
-      <div>
-        <h3>{labels.freeInput.title}</h3>
+      <div style={{ marginBottom: 12 }}>
+        <h3 className="font-bold">{labels.freeInput.title}</h3>
         <TextField
           id="outlined-multiline-static"
           fullWidth
-          label="Multiline"
           multiline
           rows={4}
           placeholder={labels.freeInput.description}

@@ -30,7 +30,7 @@ export default ({
             checked={locale === "ja"}
             onChange={() => setLocale("ja")}
           />
-          <label htmlFor="ja">Japanese</label>
+          <label htmlFor="ja">日本語</label>
         </div>
       </div>
     </div>

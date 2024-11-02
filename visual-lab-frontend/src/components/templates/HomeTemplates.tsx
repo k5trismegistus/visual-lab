@@ -3,7 +3,7 @@ import SketchPad, { SKETCHPAD_WIDTH } from "../features/Sketchpad";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import React from "react";
 import StyleSelector from "../features/StyleSelector";
-import { Button } from "@mui/material";
+import { Button, Fab } from "@mui/material";
 
 const SketchPadWithMemo = React.memo(SketchPad);
 
@@ -61,22 +61,30 @@ export default function HomeTemplate() {
   const scale = useMemo(() => Math.min(1, width / SKETCHPAD_WIDTH), [width]);
 
   return (
-    <div>
-      <div
-        style={{
-          scale: scale.toString(),
-          margin: `0 0 ${-1 * SKETCHPAD_WIDTH * aspectRatio * (1 - scale)}px`,
-          transformOrigin: "left top",
-        }}
-      >
-        <SketchPadWithMemo aspect={aspectRatio} />
+    <div className="relative">
+      <div className="flex max-w-full flex-wrap">
+        <div
+          style={{
+            scale: scale.toString(),
+            margin: `0 0 ${-1 * SKETCHPAD_WIDTH * aspectRatio * (1 - scale)}px`,
+            transformOrigin: "left top",
+          }}
+        >
+          <SketchPadWithMemo aspect={aspectRatio} />
+        </div>
+
+        <div style={{ maxWidth: SKETCHPAD_WIDTH }}>
+          <StyleSelector handleSelectStyle={() => {}} />
+          <Fab
+            sx={{ position: "sticky", bottom: 16, left: "calc(100% - 200px)" }}
+            color="primary"
+            variant="extended"
+            onClick={() => {}}
+          >
+            Generate Visual
+          </Fab>
+        </div>
       </div>
-
-      <StyleSelector handleSelectStyle={() => {}} />
-
-      <Button color="primary" variant="contained" onClick={() => {}}>
-        Generate Visual
-      </Button>
     </div>
   );
 }
