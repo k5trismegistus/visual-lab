@@ -12,11 +12,11 @@ export class VisualLabStack extends cdk.Stack {
     const dynamoTable = new dynamodb.Table(this, `VisualLabDb-${app_env}`, {
       tableName: `VisualLabDbTable_${app_env}`,
       partitionKey: {
-        name: "userId",
-        type: dynamodb.AttributeType.STRING, // typeはあとNumberとbinary
+        name: "partitionKey",
+        type: dynamodb.AttributeType.STRING,
       },
       sortKey: {
-        name: "entityTimestamp",
+        name: "sortKey",
         type: dynamodb.AttributeType.STRING,
       },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
