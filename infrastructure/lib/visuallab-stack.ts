@@ -3,6 +3,11 @@ import { Construct } from "constructs";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 import * as s3 from "aws-cdk-lib/aws-s3";
 
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
+import { Lambda } from "aws-cdk-lib/aws-ses-actions";
+import { LambdaFunctions } from "./lambdaFunctions";
+import { ApiGateway } from "./apiGateway";
+
 export class VisualLabStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -27,5 +32,8 @@ export class VisualLabStack extends cdk.Stack {
       bucketName: `visual-lab-bucket-${app_env}`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
+
+    const lambdaFunctions = new LambdaFunctions(this, s3Bucket, dynamoTable);
+    const api = new ApiGateway(this, lambdaFunctions);
   }
 }

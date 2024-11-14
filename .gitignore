@@ -1,3 +1,20 @@
 .DS_Store
 .envrc
+*.log*
 __pycache__/
+node_modules
+dist/
+
+api/venv
+
+infrastructure/cdk.out/
+infrastructure/lib/lambda_dist/
+
+infrastracture/*.js
+infrastracture/!jest.config.js
+infrastracture/*.d.ts
+infrastracture/node_modules
+
+# CDK asset staging directory
+infrastracture/.cdk.staging
+infrastracture/cdk.out
