@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect } from "react";
+import { useSketchContext } from "../../context/sketchContext";
 
 export const SKETCHPAD_WIDTH = 960;
 
 export default ({ aspect }: { aspect: number }) => {
-  const canvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const { canvasRef } = useSketchContext();
 
   let isDragging = false;
   let lastPosition: { x: number | null; y: number | null } = {

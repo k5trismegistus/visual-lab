@@ -30,18 +30,41 @@ export class ApiGateway {
       stage: this.api.deploymentStage,
     });
 
-    const lambdaIntegration = new apigateway.LambdaIntegration(
-      functions.generateSignedUrlForUploadFn,
-      {
+    const signedUrlResource = this.api.root.addResource("signed-url");
+    signedUrlResource.addMethod(
+      "GET",
+      new apigateway.LambdaIntegration(functions.generateSignedUrlForUploadFn, {
         requestTemplates: { "application/json": '{ "statusCode": 200 }' },
+      }),
+      {
+        requestParameters: {
+          "method.request.querystring.file_extension": true,
+        },
       }
     );
 
-    const signedUrlResource = this.api.root.addResource("signed-url");
-    signedUrlResource.addMethod("GET", lambdaIntegration, {
-      requestParameters: {
-        "method.request.querystring.file_extension": true,
-      },
-    });
+    const generateRequestResource =
+      this.api.root.addResource("generate-request");
+    generateRequestResource.addMethod(
+      "POST",
+      new apigateway.LambdaIntegration(functions.generateSignedUrlForUploadFn),
+      {
+        requestModels: {
+          "application/json": new apigateway.Model(stack, "RequestModel", {
+            restApi: this.api,
+            schema: {
+              type: apigateway.JsonSchemaType.OBJECT,
+              properties: {
+                object_key: { type: apigateway.JsonSchemaType.STRING },
+                instruction: { type: apigateway.JsonSchemaType.OBJECT },
+                aspect_ratio: { type: apigateway.JsonSchemaType.STRING },
+                // 必要に応じて他のパラメータを追加
+              },
+              required: ["object_key", "instruction", "aspect_ratio"],
+            },
+          }),
+        },
+      }
+    );
   }
 }

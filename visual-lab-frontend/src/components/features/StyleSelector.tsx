@@ -2,24 +2,25 @@ import { useEffect, useMemo, useState } from "react";
 import { Aesthetic, ColorScheme, Style } from "../../types/Style";
 import { styleLabels } from "../../locales/style";
 import { useLocale } from "../../context/locale";
-import { TextField } from "@mui/material";
+import { Fab, TextField } from "@mui/material";
 import IconRadioButton from "../parts/IconRadioButton";
+import { useSketchContext } from "../../context/sketchContext";
+import { useHandleGenerateRequest } from "../../hooks/useHandleGenerateRequest";
 
-export default ({
-  handleSelectStyle,
-}: {
-  handleSelectStyle: (style: Style) => void;
-}) => {
+export default () => {
   const { locale } = useLocale();
-
-  const [aesthetic, setAesthetic] = useState<Aesthetic>("photoreal");
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("natural");
 
   const labels = useMemo(() => styleLabels[locale], [locale]);
 
-  useEffect(() => {
-    handleSelectStyle({ aesthetic, colorScheme });
-  }, [aesthetic, colorScheme]);
+  const {
+    aesthetic,
+    colorScheme,
+    setAesthetic,
+    setColorScheme,
+    freeInput,
+    setFreeInput,
+    aspect,
+  } = useSketchContext();
 
   const aestheticOptions = useMemo<
     Array<{
@@ -47,6 +48,9 @@ export default ({
     ];
   }, [locale]);
 
+  const { generateCanvasImage } = useSketchContext();
+  const { isLoading, isError, generateRequest } = useHandleGenerateRequest();
+
   return (
     <div className="gap-4" style={{ width: 400, padding: "12px 12px 60px" }}>
       <h2 className="font-bold" style={{ fontSize: 24 }}>
@@ -63,6 +67,7 @@ export default ({
               label={option.label}
               selected={aesthetic === option.value}
               onClick={() => setAesthetic(option.value)}
+              key={option.value}
             />
           ))}
         </div>
@@ -77,6 +82,7 @@ export default ({
               label={option.label}
               selected={colorScheme === option.value}
               onClick={() => setColorScheme(option.value)}
+              key={option.value}
             />
           ))}
         </div>
@@ -90,8 +96,36 @@ export default ({
           rows={4}
           placeholder={labels.freeInput.description}
           style={{ color: "white" }}
+          value={freeInput}
+          onChange={(e) => setFreeInput(e.target.value)}
         />
       </div>
+
+      <Fab
+        sx={{
+          position: "sticky",
+          bottom: 16,
+          left: "calc(100% - 200px)",
+        }}
+        color="primary"
+        variant="extended"
+        onClick={async () => {
+          const imageBlob = await generateCanvasImage();
+          if (!imageBlob) return;
+
+          generateRequest({
+            instruction: {
+              aesthetic,
+              colorScheme,
+              freeInput,
+            },
+            aspectRatio: aspect,
+            imageBlob,
+          });
+        }}
+      >
+        Generate Visual
+      </Fab>
     </div>
   );
 };

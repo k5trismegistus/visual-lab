@@ -3,7 +3,7 @@ import SketchPad, { SKETCHPAD_WIDTH } from "../features/Sketchpad";
 import { useWindowSize } from "../../hooks/useWindowSize";
 import React from "react";
 import StyleSelector from "../features/StyleSelector";
-import { Button, Fab } from "@mui/material";
+import { useSketchContext } from "../../context/sketchContext";
 
 const SketchPadWithMemo = React.memo(SketchPad);
 
@@ -14,10 +14,10 @@ export default function HomeTemplate() {
   const [layout, setLayout] = useState(
     windowWidth < windowHeight || windowWidth < 960 ? "vertical" : "horizontal"
   );
-  const [aspect, setAspect] = useState("16_9");
 
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
+  const { aspect } = useSketchContext();
 
   const aspectRatio = (() => {
     if (aspect === "16_9") {
@@ -74,15 +74,7 @@ export default function HomeTemplate() {
         </div>
 
         <div style={{ maxWidth: SKETCHPAD_WIDTH }}>
-          <StyleSelector handleSelectStyle={() => {}} />
-          <Fab
-            sx={{ position: "sticky", bottom: 16, left: "calc(100% - 200px)" }}
-            color="primary"
-            variant="extended"
-            onClick={() => {}}
-          >
-            Generate Visual
-          </Fab>
+          <StyleSelector />
         </div>
       </div>
     </div>

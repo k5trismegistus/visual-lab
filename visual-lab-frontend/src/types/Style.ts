@@ -10,3 +10,5 @@ export type Style = {
   aesthetic: Aesthetic;
   colorScheme: ColorScheme;
 };
+
+export type Instruction = Style & { freeInput: string };

@@ -1,3 +1,5 @@
+# Invoked by: API Gateway
+
 import json
 from utils.boto3_session import boto3_session
 import os
