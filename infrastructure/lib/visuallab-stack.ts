@@ -31,6 +31,13 @@ export class VisualLabStack extends cdk.Stack {
     const s3Bucket = new s3.Bucket(this, `VisualLabBucket_${app_env}`, {
       bucketName: `visual-lab-bucket-${app_env}`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      cors: [
+        {
+          allowedMethods: [s3.HttpMethods.GET, s3.HttpMethods.PUT],
+          allowedOrigins: ["*"],
+          allowedHeaders: ["*"],
+        },
+      ],
     });
 
     const lambdaFunctions = new LambdaFunctions(this, s3Bucket, dynamoTable);

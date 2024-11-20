@@ -31,6 +31,17 @@ export class ApiGateway {
     });
 
     const signedUrlResource = this.api.root.addResource("signed-url");
+    signedUrlResource.addCorsPreflight({
+      allowOrigins: apigateway.Cors.ALL_ORIGINS, // Allow all origins
+      allowMethods: ["GET", "OPTIONS"], // Allow GET, POST and OPTIONS
+      allowHeaders: [
+        "Content-Type",
+        "X-Amz-Date",
+        "Authorization",
+        "X-Api-Key",
+        "X-Amz-Security-Token",
+      ], // Allow only Content-Type header
+    });
     signedUrlResource.addMethod(
       "GET",
       new apigateway.LambdaIntegration(functions.generateSignedUrlForUploadFn, {
@@ -45,6 +56,17 @@ export class ApiGateway {
 
     const generateRequestResource =
       this.api.root.addResource("generate-request");
+    generateRequestResource.addCorsPreflight({
+      allowOrigins: apigateway.Cors.ALL_ORIGINS, // Allow all origins
+      allowMethods: ["GET", "POST", "OPTIONS"], // Allow GET, POST and OPTIONS
+      allowHeaders: [
+        "Content-Type",
+        "X-Amz-Date",
+        "Authorization",
+        "X-Api-Key",
+        "X-Amz-Security-Token",
+      ], // Allow only Content-Type header
+    });
     generateRequestResource.addMethod(
       "POST",
       new apigateway.LambdaIntegration(functions.generateSignedUrlForUploadFn),

@@ -14,6 +14,11 @@ def lambda_handler(event, context):
     if not object_key or not instruction or not aspect_ratio:
         return {
             'statusCode': 400,
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+                "Content-Type": "application/json"
+            },
             'body': json.dumps({
                 'message': 'Missing required fields'
             })
@@ -23,4 +28,9 @@ def lambda_handler(event, context):
 
     return {
         'statusCode': 201,
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+            "Content-Type": "application/json"
+        },
     }
