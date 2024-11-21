@@ -69,7 +69,7 @@ export class ApiGateway {
     });
     generateRequestResource.addMethod(
       "POST",
-      new apigateway.LambdaIntegration(functions.generateSignedUrlForUploadFn),
+      new apigateway.LambdaIntegration(functions.createGenerateRequestFn),
       {
         requestModels: {
           "application/json": new apigateway.Model(stack, "RequestModel", {

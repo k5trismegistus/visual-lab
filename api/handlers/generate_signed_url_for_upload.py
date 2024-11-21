@@ -4,8 +4,14 @@ import json
 from utils.boto3_session import boto3_session
 import os
 import uuid
+from botocore.config import Config
 
-s3 = boto3_session.client('s3')
+my_config = Config(
+    signature_version = 's3v4',
+)
+
+
+s3 = boto3_session.client('s3', config=my_config)
 
 def lambda_handler(event, context):
     bucket_name = os.getenv("MY_BUCKET_NAME")
