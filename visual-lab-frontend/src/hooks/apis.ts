@@ -57,12 +57,10 @@ const fetchApi = async <T>({
         }
       })();
 
-      console.log(error);
-
       return { data: null, error };
     }
 
-    const data = (await response.json()) as T;
+    const data = response.body && ((await response.json()) as T);
     return { data, error: null };
   } catch (error) {
     console.log(error);

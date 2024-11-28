@@ -4,13 +4,12 @@ import { useWindowSize } from "../../hooks/useWindowSize";
 import React from "react";
 import StyleSelector from "../features/StyleSelector";
 import { useSketchContext } from "../../context/sketchContext";
-
-const SketchPadWithMemo = React.memo(SketchPad);
+const SketchPadWithMemo = React.memo(SketchPad, (prevProps, nextProps) => {
+  return prevProps.aspect === nextProps.aspect;
+});
 
 export default function HomeTemplate() {
   const { windowWidth, windowHeight } = useWindowSize();
-
-  // 画面サイズが縦長or横が800px未満の場合はレイアウトをverticalに、それ以外はhorizontalにする
   const [layout, setLayout] = useState(
     windowWidth < windowHeight || windowWidth < 960 ? "vertical" : "horizontal"
   );
@@ -19,14 +18,14 @@ export default function HomeTemplate() {
   const [height, setHeight] = useState(0);
   const { aspect } = useSketchContext();
 
-  const aspectRatio = (() => {
+  const aspectRatio = useMemo(() => {
     if (aspect === "16_9") {
       return 9 / 16;
     } else if (aspect === "4_3") {
       return 3 / 4;
     }
     return 0;
-  })();
+  }, [aspect]);
 
   useEffect(() => {
     if (windowWidth < windowHeight || windowWidth < SKETCHPAD_WIDTH) {
@@ -37,26 +36,12 @@ export default function HomeTemplate() {
 
     if (layout === "vertical") {
       setWidth(windowWidth);
-      setHeight(() => {
-        if (aspect === "16_9") {
-          return windowWidth * (9 / 16);
-        } else if (aspect === "4_3") {
-          return windowWidth * (3 / 4);
-        }
-        return 0;
-      });
+      setHeight(windowWidth * aspectRatio);
     } else {
       setWidth(SKETCHPAD_WIDTH);
-      setHeight(() => {
-        if (aspect === "16_9") {
-          return 540;
-        } else if (aspect === "4_3") {
-          return 720;
-        }
-        return 0;
-      });
+      setHeight(SKETCHPAD_WIDTH * aspectRatio);
     }
-  }, [windowWidth, windowHeight]);
+  }, [windowWidth, windowHeight, aspectRatio, layout]);
 
   const scale = useMemo(() => Math.min(1, width / SKETCHPAD_WIDTH), [width]);
 
