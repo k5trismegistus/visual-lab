@@ -1,16 +1,22 @@
 import { useState } from "react";
 import { Instruction } from "../types/Style";
-import {
-  useCreateGenerateRequest,
-  useShowSignedUrlForUploadSketch,
-} from "./apis";
+import { useSignedUrlForUploadSketch, useCreateGenerateRequest } from "./apis";
 import { ASPECTS } from "../context/sketchContext";
 
 export const useHandleGenerateRequest = () => {
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(false);
+  // Get a function to fetch a signed URL
+  const { fetchSignedUrl, error: presignedError } =
+    useSignedUrlForUploadSketch();
 
-  // Generate request
+  // Get a function to create a generate request
+  const {
+    createGenerateRequest,
+    isLoading: createLoading,
+    error: createError,
+  } = useCreateGenerateRequest();
+
   const generateRequest = async ({
     imageBlob,
     instruction,
@@ -22,46 +28,52 @@ export const useHandleGenerateRequest = () => {
   }) => {
     setLoading(true);
 
-    const {
-      data: presignedData,
-      isLoading: presignedLoading,
-      isError: presignedError,
-    } = useShowSignedUrlForUploadSketch({ fileExtension: "jpeg" });
+    const fileExtension = imageBlob.type.split("/")[1];
+    const { signedUrl, objectKey } = await fetchSignedUrl({ fileExtension });
 
-    const presignedUrl = presignedData?.signed_url;
-    if (!presignedUrl) {
+    if (presignedError || !signedUrl || !objectKey) {
       setError(true);
-      window.alert("Failed to upload image");
+      window.alert(
+        `Failed to fetch signed URL: ${presignedError || "UNKNOW_ERROR"}`
+      );
+      setLoading(false);
       return;
     }
 
     try {
-      await fetch(presignedUrl, {
+      // Upload the image to S3
+      await fetch(signedUrl, {
         method: "PUT",
         body: imageBlob,
       });
     } catch (err) {
       console.error(err);
-      window.alert("Failed to upload image");
       setError(true);
+      window.alert("Failed to upload image to S3");
+      setLoading(false);
       return;
     }
 
-    try {
-      await useCreateGenerateRequest({
-        objectKey: presignedData.object_key,
-        instruction,
-        aspectRatio,
-      });
-    } catch (err) {
-      console.error(err);
-      window.alert("Failed to generate request");
+    // Create a generate request
+    await createGenerateRequest({
+      objectKey: objectKey,
+      instruction,
+      aspectRatio,
+    });
+
+    if (createError) {
       setError(true);
+      window.alert(`Failed to complete generate request: ${createError}`);
+      setLoading(false);
       return;
     }
 
     setLoading(false);
   };
 
-  return { isLoading, isError, generateRequest };
+  return {
+    isLoading,
+    isError,
+    generateRequest,
+  };
 };
