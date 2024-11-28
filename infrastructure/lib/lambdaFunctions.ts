@@ -40,5 +40,6 @@ export class LambdaFunctions {
         },
       }
     );
+    dynamoTable.grantReadWriteData(this.createGenerateRequestFn);
   }
 }
