@@ -1,6 +1,5 @@
 import sys, os
 
-from api.models.generated_image import GeneratedImage
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import uuid
 import datetime
@@ -73,6 +72,7 @@ class GenerateRequest():
     self.status = status
 
   def generated_images(self):
+    from models.generated_image import GeneratedImage
     return GeneratedImage.index_by_request(self.key)
 
   def key(self):

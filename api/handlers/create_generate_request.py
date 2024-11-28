@@ -1,8 +1,7 @@
 # Invoked by: API Gateway
 
 import json
-from api.models.generate_request import GenerateRequest
-
+from models.generate_request import GenerateRequest
 
 def lambda_handler(event, context):
     body = json.loads(event["body"])

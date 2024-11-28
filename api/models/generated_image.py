@@ -1,7 +1,6 @@
 import base64
 import sys, os
 
-from api.models.generate_request import GenerateRequest
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import uuid
 import datetime
@@ -72,6 +71,7 @@ class GeneratedImage():
     }
 
   def request(self):
+    from models.generate_request import GenerateRequest
     if self.request is None:
       self.request = GenerateRequest.get(self.request_pk, self.request_sk)
 
