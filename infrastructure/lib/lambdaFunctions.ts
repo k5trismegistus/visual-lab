@@ -6,6 +6,7 @@ import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
 export class LambdaFunctions {
   generateSignedUrlForUploadFn: lambda.Function;
   createGenerateRequestFn: lambda.Function;
+  handleCreatedGenerateRequestFn: lambda.Function;
 
   constructor(
     stack: cdk.Stack,
@@ -27,6 +28,7 @@ export class LambdaFunctions {
     );
     s3Bucket.grantReadWrite(this.generateSignedUrlForUploadFn);
 
+    // The function which handle the api request to create a generate request
     this.createGenerateRequestFn = new lambda.Function(
       stack,
       "createGenerateRequest",
@@ -41,5 +43,23 @@ export class LambdaFunctions {
       }
     );
     dynamoTable.grantReadWriteData(this.createGenerateRequestFn);
+
+    // The function which subscribes dynamoDB stream
+    this.handleCreatedGenerateRequestFn = new lambda.Function(
+      stack,
+      "handleCreatedGenerateRequest",
+      {
+        runtime: lambda.Runtime.PYTHON_3_12,
+        handler: "handlers.handle_created_generate_request.lambda_handler",
+        code: lambda.Code.fromAsset("./lib/lambda_dist"),
+        environment: {
+          MY_BUCKET_NAME: s3Bucket.bucketName,
+          DYNAMO_TABLE: dynamoTable.tableName,
+        },
+      }
+    );
+    s3Bucket.grantReadWrite(this.handleCreatedGenerateRequestFn);
+    dynamoTable.grantReadWriteData(this.handleCreatedGenerateRequestFn);
+    dynamoTable.grantStreamRead(this.handleCreatedGenerateRequestFn);
   }
 }

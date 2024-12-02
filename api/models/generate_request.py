@@ -165,6 +165,7 @@ class GenerateRequest():
     )
 
     def start_generate(self):
+      from models.generated_image import GeneratedImage
       for i in range(3):
         GeneratedImage.create(self.key, i)
 

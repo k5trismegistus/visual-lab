@@ -26,6 +26,7 @@ export class VisualLabStack extends cdk.Stack {
       },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
+      stream: dynamodb.StreamViewType.NEW_IMAGE,
     });
 
     const s3Bucket = new s3.Bucket(this, `VisualLabBucket_${app_env}`, {
