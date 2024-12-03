@@ -13,7 +13,7 @@ export class DynamoDbStream {
     functions.handleCreatedGenerateRequestFn.addEventSource(
       new DynamoEventSource(dynamoTable, {
         startingPosition: lambda.StartingPosition.LATEST,
-      )
+      })
     );
   }
 }

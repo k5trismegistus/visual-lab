@@ -7,6 +7,7 @@ import * as apigateway from "aws-cdk-lib/aws-apigateway";
 import { Lambda } from "aws-cdk-lib/aws-ses-actions";
 import { LambdaFunctions } from "./lambdaFunctions";
 import { ApiGateway } from "./apiGateway";
+import { DynamoDbStream } from "./dynamoDbStream";
 
 export class VisualLabStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -43,5 +44,10 @@ export class VisualLabStack extends cdk.Stack {
 
     const lambdaFunctions = new LambdaFunctions(this, s3Bucket, dynamoTable);
     const api = new ApiGateway(this, lambdaFunctions);
+    const dynamoDbStream = new DynamoDbStream(
+      this,
+      lambdaFunctions,
+      dynamoTable
+    );
   }
 }
